@@ -359,7 +359,24 @@
         </button>
     </nav>
 
-    <script src="js/data.js"></script>
+    <script>
+        // Inline Data (to ensure it loads)
+        const CATEGORIES_DATA = [
+            { id: 'food', name: '푸드 & 디저트', slug: 'food', growth_rate: 340, trend_count: 12, icon: 'restaurant', color: '#ff6b6b', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600' },
+            { id: 'finance', name: '금융 & 투자', slug: 'finance', growth_rate: 280, trend_count: 8, icon: 'trending_up', color: '#4ecdc4', image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600' },
+            { id: 'fashion', name: '패션 & 뷰티', slug: 'fashion', growth_rate: 520, trend_count: 15, icon: 'checkroom', color: '#45b7d1', image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200' },
+            { id: 'entertainment', name: '엔터테인먼트', slug: 'entertainment', growth_rate: 180, trend_count: 6, icon: 'movie', color: '#96ceb4', image: 'https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?w=600' }
+        ];
+        
+        const TRENDS_DATA = [
+            { id: 1, keyword: '공간 컴퓨팅 에코시스템', category: 'tech', category_name: '테크', subcategory: 'AR/VR', growth_rate: 890, confidence: 87, peak_date: '2026-03-05', days_to_peak: 18, description: '메타버스와 실제 세계를 연결하는 공간 컴퓨팅 기술', reasoning: 'Apple Vision Pro 출시 이후 R&D 투자 340% 증가', chart_data: [23, 35, 58, 89, 145, 210, 340, 480, 650, 890] },
+            { id: 2, keyword: '나이키 덩크 로우 흰색', category: 'fashion', category_name: '패션', subcategory: '스니커즈', growth_rate: 340, confidence: 87, peak_date: '2026-03-15', days_to_peak: 28, description: '봄 시즌 흰색 스니커즈 수요 급증', reasoning: '3월 흰색 스니커즈 검색량 평균 280% 증가', chart_data: [45, 65, 95, 145, 220, 310, 340] },
+            { id: 3, keyword: '재생 여행 디자인', category: 'travel', category_name: '여행', subcategory: '라이프스타일', growth_rate: 670, confidence: 78, peak_date: '2026-03-08', days_to_peak: 21, description: '환경을 회복시키는 지속가능한 여행', reasoning: '밀레니얼 세대 450% 검색 증가', chart_data: [30, 55, 125, 250, 460, 670] },
+            { id: 4, keyword: '바이오 섬유', category: 'fashion', category_name: '패션', subcategory: '지속가능성', growth_rate: 540, confidence: 72, peak_date: '2026-03-15', days_to_peak: 28, description: '버섯, 해초에서 추출한 친환경 소재', reasoning: '주요 브랜드 ESG 경영 강화로 수요 급증', chart_data: [25, 48, 98, 195, 350, 540] },
+            { id: 5, keyword: '디그로스 경제 모델', category: 'finance', category_name: '금융', subcategory: '경제', growth_rate: 430, confidence: 65, peak_date: '2026-03-22', days_to_peak: 35, description: '성장보다 안정과 분배를 중시하는 경제', reasoning: '경제 불확실성으로 안정적 모델 논의 활발', chart_data: [20, 42, 95, 210, 330, 430] },
+            { id: 6, keyword: '신경다양성 워크스페이스', category: 'career', category_name: '커리어', subcategory: 'HR', growth_rate: 120, confidence: 52, peak_date: '2026-03-29', days_to_peak: 42, description: 'ADHD, 자폐 스펙트럼 직원 위한 환경', reasoning: '글로벌 기업 신경다양성 채용 확대', chart_data: [15, 35, 72, 120] }
+        ];
+    </script>
     <script src="js/app.js"></script>
 </body>
 </html>
