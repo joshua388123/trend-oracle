@@ -9,47 +9,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --primary: #0f49bd;
-            --accent: #00d4aa;
-            --danger: #ff4757;
-            --warning: #ffa502;
-        }
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background: #f6f6f8;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-        }
-        .nav-active .material-symbols-outlined {
-            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.33); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-        .prediction-pulse {
-            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        }
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease-in;
-        }
-        .page.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .trend-item {
-            transition: all 0.2s;
-        }
-        .trend-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+        :root { --primary: #0f49bd; --accent: #00d4aa; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f6f6f8; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .nav-active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        @keyframes pulse-ring { 0% { transform: scale(0.33); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        .prediction-pulse { animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .trend-item:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body class="text-gray-900">
@@ -80,12 +49,8 @@
         <div class="w-full max-w-2xl mx-4 bg-white rounded-2xl p-6 shadow-2xl" onclick="event.stopPropagation()">
             <div class="flex items-center gap-3 mb-4">
                 <span class="material-symbols-outlined text-blue-600 text-2xl">search</span>
-                <input type="text" id="searchInput" placeholder="키워드로 검색..." 
-                       class="flex-1 text-lg bg-transparent border-none outline-none"
-                       onkeypress="if(event.key==='Enter')performSearch()">
-                <button onclick="closeSearch()" class="text-gray-400">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
+                <input type="text" id="searchInput" placeholder="키워드로 검색..." class="flex-1 text-lg bg-transparent border-none outline-none" onkeypress="if(event.key==='Enter')performSearch()">
+                <button onclick="closeSearch()" class="text-gray-400"><span class="material-symbols-outlined">close</span></button>
             </div>
             <div class="flex flex-wrap gap-2">
                 <button onclick="quickSearch('아이폰16')" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm hover:bg-blue-600 hover:text-white">#아이폰16</button>
@@ -111,39 +76,24 @@
                             </span>
                             <span class="text-sm text-blue-100">실시간 예측 엔진 가동 중</span>
                         </div>
-                        <h2 class="text-3xl font-bold mb-4">트렌드를 미리 읽다</h2>
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">트렌드를 미리 읽다</h2>
                         <p class="text-blue-100 mb-6">AI가 분석하는 다음 주 트렌드. 확신도 87%</p>
                         <button onclick="openSearch()" class="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold flex items-center gap-2">
-                            <span class="material-symbols-outlined">search</span>
-                            예측하기
+                            <span class="material-symbols-outlined">search</span>예측하기
                         </button>
                     </div>
                     <div class="relative z-10 mt-8 grid grid-cols-3 gap-4 text-center">
-                        <div class="bg-white/10 rounded-xl p-4">
-                            <p class="text-2xl font-bold">2.4M</p>
-                            <p class="text-sm text-blue-200">분석 데이터</p>
-                        </div>
-                        <div class="bg-white/10 rounded-xl p-4">
-                            <p class="text-2xl font-bold">89%</p>
-                            <p class="text-sm text-blue-200">정확도</p>
-                        </div>
-                        <div class="bg-white/10 rounded-xl p-4">
-                            <p class="text-2xl font-bold">14일</p>
-                            <p class="text-sm text-blue-200">선행 예측</p>
-                        </div>
+                        <div class="bg-white/10 rounded-xl p-4"><p class="text-2xl font-bold">2.4M</p><p class="text-sm text-blue-200">분석 데이터</p></div>
+                        <div class="bg-white/10 rounded-xl p-4"><p class="text-2xl font-bold">89%</p><p class="text-sm text-blue-200">정확도</p></div>
+                        <div class="bg-white/10 rounded-xl p-4"><p class="text-2xl font-bold">14일</p><p class="text-sm text-blue-200">선행 예측</p></div>
                     </div>
                 </div>
             </section>
 
-            <!-- Featured Prediction -->
+            <!-- Featured -->
             <section class="px-6 pt-8">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold flex items-center gap-2">
-                        <span class="material-symbols-outlined text-blue-600">stars</span>
-                        오늘의 주요 예측
-                    </h3>
-                </div>
-                <div class="bg-white rounded-2xl p-6 shadow-lg cursor-pointer" onclick="showDetail(2)">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-blue-600">stars</span>오늘의 주요 예측</h3>
+                <div class="bg-white rounded-2xl p-6 shadow-lg cursor-pointer" onclick="showDetail('nike')">
                     <div class="flex items-start gap-4">
                         <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">87%</div>
                         <div class="flex-1">
@@ -154,10 +104,7 @@
                             <h4 class="text-lg font-bold mb-1">나이키 덩크 로우 '흰색'</h4>
                             <p class="text-sm text-gray-600 mb-3">3주 후 검색량 340% 급등 예상</p>
                             <div class="flex items-center gap-4 text-sm">
-                                <span class="flex items-center gap-1 text-green-600">
-                                    <span class="material-symbols-outlined text-sm">trending_up</span>
-                                    +340%
-                                </span>
+                                <span class="flex items-center gap-1 text-green-600"><span class="material-symbols-outlined text-sm">trending_up</span>+340%</span>
                                 <span class="text-gray-400">|</span>
                                 <span class="text-gray-600">피크: 3월 15일</span>
                             </div>
@@ -166,471 +113,145 @@
                 </div>
             </section>
 
-            <!-- Trend List - STATIC -->
+            <!-- Trend List -->
             <section class="px-6 pt-8">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-bold flex items-center gap-2">
-                        <span class="relative flex h-3 w-3">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-600 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
-                        </span>
+                        <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-600 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span></span>
                         실시간 급상승
                     </h3>
                     <span class="text-xs text-gray-500">2분 전 업데이트</span>
                 </div>
                 <div class="space-y-3">
-                    <!-- Trend 1 -->
-                    <div onclick="showDetail(1)" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer">
+                    <div onclick="showDetail('spatial')" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer transition-all">
                         <div class="flex items-center gap-4">
                             <span class="text-3xl font-black text-blue-100 italic">01</span>
                             <div class="flex-1">
                                 <p class="font-bold text-sm">공간 컴퓨팅 에코시스템</p>
                                 <p class="text-xs text-blue-600">테크 · AR/VR</p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-green-600 font-bold">+890%</p>
-                                <p class="text-xs text-gray-400">D-18</p>
-                            </div>
+                            <div class="text-right"><p class="text-green-600 font-bold">+890%</p><p class="text-xs text-gray-400">D-18</p></div>
                         </div>
-                        <div class="mt-3">
-                            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-blue-600 to-green-400 rounded-full" style="width: 87%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">확신도 87% · 피크: 2026-03-05</p>
-                        </div>
+                        <div class="mt-3"><div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-blue-600 to-green-400 rounded-full" style="width: 87%"></div></div><p class="text-xs text-gray-500 mt-1">확신도 87%</p></div>
                     </div>
-                    
-                    <!-- Trend 2 -->
-                    <div onclick="showDetail(3)" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer">
+                    <div onclick="showDetail('travel')" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer transition-all">
                         <div class="flex items-center gap-4">
                             <span class="text-3xl font-black text-blue-100 italic">02</span>
                             <div class="flex-1">
                                 <p class="font-bold text-sm">재생 여행 디자인</p>
                                 <p class="text-xs text-blue-600">여행 · 라이프스타일</p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-green-600 font-bold">+670%</p>
-                                <p class="text-xs text-gray-400">D-21</p>
-                            </div>
+                            <div class="text-right"><p class="text-green-600 font-bold">+670%</p><p class="text-xs text-gray-400">D-21</p></div>
                         </div>
-                        <div class="mt-3">
-                            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-blue-600 to-green-400 rounded-full" style="width: 78%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">확신도 78% · 피크: 2026-03-08</p>
-                        </div>
+                        <div class="mt-3"><div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-blue-600 to-green-400 rounded-full" style="width: 78%"></div></div><p class="text-xs text-gray-500 mt-1">확신도 78%</p></div>
                     </div>
-                    
-                    <!-- Trend 3 -->
-                    <div onclick="showDetail(4)" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer">
+                    <div onclick="showDetail('bio')" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer transition-all">
                         <div class="flex items-center gap-4">
                             <span class="text-3xl font-black text-blue-100 italic">03</span>
                             <div class="flex-1">
                                 <p class="font-bold text-sm">바이오 섬유</p>
                                 <p class="text-xs text-blue-600">패션 · 지속가능성</p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-green-600 font-bold">+540%</p>
-                                <p class="text-xs text-gray-400">D-28</p>
-                            </div>
+                            <div class="text-right"><p class="text-green-600 font-bold">+540%</p><p class="text-xs text-gray-400">D-28</p></div>
                         </div>
-                        <div class="mt-3">
-                            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-blue-600 to-green-400 rounded-full" style="width: 72%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">확신도 72% · 피크: 2026-03-15</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Trend 4 -->
-                    <div onclick="showDetail(5)" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer">
-                        <div class="flex items-center gap-4">
-                            <span class="text-3xl font-black text-blue-100 italic">04</span>
-                            <div class="flex-1">
-                                <p class="font-bold text-sm">디그로스 경제 모델</p>
-                                <p class="text-xs text-blue-600">금융 · 경제</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-green-600 font-bold">+430%</p>
-                                <p class="text-xs text-gray-400">D-35</p>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full" style="width: 65%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">확신도 65% · 피크: 2026-03-22</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Trend 5 -->
-                    <div onclick="showDetail(6)" class="trend-item bg-white rounded-xl p-4 shadow-sm cursor-pointer">
-                        <div class="flex items-center gap-4">
-                            <span class="text-3xl font-black text-blue-100 italic">05</span>
-                            <div class="flex-1">
-                                <p class="font-bold text-sm">신경다양성 워크스페이스</p>
-                                <p class="text-xs text-blue-600">커리어 · HR</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-yellow-600 font-bold">+120%</p>
-                                <p class="text-xs text-gray-400">D-42</p>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-yellow-400 to-yellow-400 rounded-full" style="width: 52%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">확신도 52% · 피크: 2026-03-29</p>
-                        </div>
+                        <div class="mt-3"><div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-blue-600 to-green-400 rounded-full" style="width: 72%"></div></div><p class="text-xs text-gray-500 mt-1">확신도 72%</p></div>
                     </div>
                 </div>
             </section>
 
-            <!-- Categories - STATIC (shows immediately) -->
+            <!-- Categories -->
             <section class="px-6 pt-8 pb-6">
                 <h3 class="text-2xl font-bold mb-6">카테고리별 예측</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Food -->
-                    <div onclick="showCategoryDetail('food')" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer">
+                    <a href="category-food.html" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer block">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 z-20">
-                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+340%</span>
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full">
-                            <p class="text-white/80 text-xs">12개 트렌드</p>
-                            <p class="text-white font-bold text-lg">푸드 & 디저트</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Finance -->
-                    <div onclick="showCategoryDetail('finance')" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer">
+                        <div class="absolute top-3 left-3 z-20"><span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+340%</span></div>
+                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full"><p class="text-white/80 text-xs">12개 트렌드</p><p class="text-white font-bold text-lg">푸드 & 디저트</p></div>
+                    </a>
+                    <a href="category-finance.html" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer block">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 z-20">
-                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+280%</span>
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full">
-                            <p class="text-white/80 text-xs">8개 트렌드</p>
-                            <p class="text-white font-bold text-lg">금융 & 투자</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Fashion (Wide) -->
-                    <div onclick="showCategoryDetail('fashion')" class="relative aspect-[16/9] overflow-hidden rounded-2xl group cursor-pointer col-span-2">
+                        <div class="absolute top-3 left-3 z-20"><span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+280%</span></div>
+                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full"><p class="text-white/80 text-xs">8개 트렌드</p><p class="text-white font-bold text-lg">금융 & 투자</p></div>
+                    </a>
+                    <a href="category-fashion.html" class="relative aspect-[16/9] overflow-hidden rounded-2xl group cursor-pointer col-span-2 block">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 z-20">
-                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+520%</span>
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-5 z-20 w-full">
-                            <p class="text-white/80 text-xs">15개 트렌드</p>
-                            <p class="text-white font-bold text-2xl">패션 & 뷰티</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Entertainment -->
-                    <div onclick="showCategoryDetail('entertainment')" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer">
+                        <div class="absolute top-3 left-3 z-20"><span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+520%</span></div>
+                        <div class="absolute bottom-0 left-0 p-5 z-20 w-full"><p class="text-white/80 text-xs">15개 트렌드</p><p class="text-white font-bold text-2xl">패션 & 뷰티</p></div>
+                    </a>
+                    <a href="category-entertainment.html" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer block">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <img src="https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 z-20">
-                            <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded font-bold">+180%</span>
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full">
-                            <p class="text-white/80 text-xs">6개 트렌드</p>
-                            <p class="text-white font-bold text-lg">엔터테인먼트</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Sports -->
-                    <div onclick="showCategoryDetail('sports')" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer">
+                        <div class="absolute top-3 left-3 z-20"><span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded font-bold">+180%</span></div>
+                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full"><p class="text-white/80 text-xs">6개 트렌드</p><p class="text-white font-bold text-lg">엔터테인먼트</p></div>
+                    </a>
+                    <a href="category-sports.html" class="relative aspect-[4/5] overflow-hidden rounded-2xl group cursor-pointer block">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-3 left-3 z-20">
-                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+410%</span>
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full">
-                            <p class="text-white/80 text-xs">9개 트렌드</p>
-                            <p class="text-white font-bold text-lg">스포츠 & 피트니스</p>
-                        </div>
-                    </div>
+                        <div class="absolute top-3 left-3 z-20"><span class="bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">+410%</span></div>
+                        <div class="absolute bottom-0 left-0 p-4 z-20 w-full"><p class="text-white/80 text-xs">9개 트렌드</p><p class="text-white font-bold text-lg">스포츠 & 피트니스</p></div>
+                    </a>
                 </div>
             </section>
-        </div>
-
-        <!-- DISCOVER PAGE - STATIC -->
-        <div id="page-discover" class="page">
-            <div class="px-6 py-4 border-b flex items-center gap-4">
-                <button onclick="showPage('home')" class="p-2 hover:bg-gray-100 rounded-full">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                </button>
-                <h1 class="text-xl font-bold">발견</h1>
-            </div>
-            <div class="px-6 pt-6">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 text-white mb-6">
-                    <h2 class="text-xl font-bold mb-2">새로운 트렌드 발견</h2>
-                    <p class="text-blue-100">매일 업데이트되는 전 세계 트렌드</p>
-                </div>
-                <h3 class="text-lg font-bold mb-4">모든 카테고리</h3>
-                <div class="space-y-3">
-                    <div onclick="showCategoryDetail('food')" class="bg-white rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #ff6b6b20">
-                            <span class="material-symbols-outlined" style="color: #ff6b6b">restaurant</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold">푸드 & 디저트</p>
-                            <p class="text-xs text-gray-500">음식, 디저트, 레스토랑 트렌드</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-green-600 font-bold">+340%</p>
-                            <p class="text-xs text-gray-400">12개</p>
-                        </div>
-                    </div>
-                    
-                    <div onclick="showCategoryDetail('finance')" class="bg-white rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #4ecdc420">
-                            <span class="material-symbols-outlined" style="color: #4ecdc4">trending_up</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold">금융 & 투자</p>
-                            <p class="text-xs text-gray-500">주식, 코인, 경제 트렌드</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-green-600 font-bold">+280%</p>
-                            <p class="text-xs text-gray-400">8개</p>
-                        </div>
-                    </div>
-                    
-                    <div onclick="showCategoryDetail('fashion')" class="bg-white rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #45b7d120">
-                            <span class="material-symbols-outlined" style="color: #45b7d1">checkroom</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold">패션 & 뷰티</p>
-                            <p class="text-xs text-gray-500">의류, 뷰티, 스타일 트렌드</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-green-600 font-bold">+520%</p>
-                            <p class="text-xs text-gray-400">15개</p>
-                        </div>
-                    </div>
-                    
-                    <div onclick="showCategoryDetail('tech')" class="bg-white rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #ff9ff320">
-                            <span class="material-symbols-outlined" style="color: #ff9ff3">computer</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold">테크 & 스타트업</p>
-                            <p class="text-xs text-gray-500">기술, 스타트업, 혁신 트렌드</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-green-600 font-bold">+670%</p>
-                            <p class="text-xs text-gray-400">11개</p>
-                        </div>
-                    </div>
-                    
-                    <div onclick="showCategoryDetail('sports')" class="bg-white rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #feca5720">
-                            <span class="material-symbols-outlined" style="color: #feca57">fitness_center</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold">스포츠 & 피트니스</p>
-                            <p class="text-xs text-gray-500">울동, 건강, 웰니스 트렌드</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-green-600 font-bold">+410%</p>
-                            <p class="text-xs text-gray-400">9개</p>
-                        </div>
-                    </div>
-                    
-                    <div onclick="showCategoryDetail('entertainment')" class="bg-white rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: #96ceb420">
-                            <span class="material-symbols-outlined" style="color: #96ceb4">movie</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold">엔터테인먼트</p>
-                            <p class="text-xs text-gray-500">영화, 드라마, 음악 트렌드</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-yellow-600 font-bold">+180%</p>
-                            <p class="text-xs text-gray-400">6개</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SAVED PAGE -->
-        <div id="page-saved" class="page">
-            <div class="px-6 py-4 border-b">
-                <h1 class="text-xl font-bold">저장한 예측</h1>
-            </div>
-            <div class="px-6 pt-6">
-                <div id="savedListContainer" class="space-y-3">
-                    <div class="bg-white rounded-2xl p-8 text-center">
-                        <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">bookmark_border</span>
-                        <p class="text-gray-500">아직 저장한 예측이 없습니다</p>
-                        <p class="text-sm text-gray-400 mt-2">관심 있는 트렌드를 저장하세요</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROFILE PAGE -->
-        <div id="page-profile" class="page">
-            <div class="px-6 py-4 border-b">
-                <h1 class="text-xl font-bold">프로필</h1>
-            </div>
-            <div class="px-6 pt-6">
-                <div class="bg-white rounded-2xl p-6 shadow-lg mb-6">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">브</div>
-                        <div>
-                            <h2 class="text-xl font-bold">브로</h2>
-                            <p class="text-sm text-gray-500">joshua388123@gmail.com</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="p-4 bg-gray-50 rounded-xl">
-                            <p class="text-2xl font-bold" id="savedCount">0</p>
-                            <p class="text-xs text-gray-500">저장한 예측</p>
-                        </div>
-                        <div class="p-4 bg-gray-50 rounded-xl">
-                            <p class="text-2xl font-bold">89%</p>
-                            <p class="text-xs text-gray-500">정확도</p>
-                        </div>
-                        <div class="p-4 bg-gray-50 rounded-xl">
-                            <p class="text-2xl font-bold">5</p>
-                            <p class="text-xs text-gray-500">알림 설정</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <button class="w-full flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b">
-                        <span class="material-symbols-outlined">notifications</span>
-                        <span class="flex-1 text-left">알림 설정</span>
-                        <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-                    </button>
-                    <button class="w-full flex items-center gap-4 px-6 py-4 hover:bg-gray-50">
-                        <span class="material-symbols-outlined text-red-500">logout</span>
-                        <span class="flex-1 text-left text-red-500">로그아웃</span>
-                        <span class="material-symbols-outlined text-gray-400">chevron_right</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- DETAIL PAGE -->
-        <div id="page-detail" class="page">
-            <div class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg px-6 py-4 border-b">
-                <div class="flex items-center gap-4">
-                    <button onclick="goBack()" class="p-2 hover:bg-gray-100 rounded-full">
-                        <span class="material-symbols-outlined">arrow_back</span>
-                    </button>
-                    <h1 class="text-xl font-bold">상세 분석</h1>
-                </div>
-            </div>
-            <div class="px-6 pt-6">
-                <div class="bg-white rounded-2xl p-6 shadow-lg mb-6">
-                    <div class="flex items-start gap-4 mb-6">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center text-white text-3xl font-bold" id="detailConfidence">87%</div>
-                        <div class="flex-1">
-                            <p class="text-sm text-gray-500" id="detailCategory">패션</p>
-                            <h2 class="text-2xl font-bold" id="detailTitle">나이키 덩크 로우</h2>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-4 mb-6">
-                        <div class="text-center p-4 bg-gray-50 rounded-xl">
-                            <p class="text-xl font-bold text-green-600" id="detailGrowth">+340%</p>
-                            <p class="text-xs text-gray-500">성장률</p>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-xl">
-                            <p class="text-xl font-bold text-blue-600" id="detailDays">D-21</p>
-                            <p class="text-xs text-gray-500">피크까지</p>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-xl">
-                            <p class="text-xl font-bold text-orange-500" id="detailPeak">3/15</p>
-                            <p class="text-xs text-gray-500">예상 피크</p>
-                        </div>
-                    </div>
-                    <div class="mb-6">
-                        <h3 class="font-bold mb-3">트렌드 예측 그래프</h3>
-                        <canvas id="trendChart" class="w-full h-64"></canvas>
-                    </div>
-                    <div class="bg-blue-50 rounded-xl p-4">
-                        <h3 class="font-bold mb-2 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-blue-600">psychology</span>
-                            AI 예측 근거
-                        </h3>
-                        <p class="text-sm text-gray-600" id="detailReasoning">
-                            과거 유사 트렌드 패턴과 현재 소셜 미디어 언급량 증가율을 종합했을 때 강한 성장이 예상됩니다.
-                        </p>
-                    </div>
-                </div>
-                <button onclick="saveCurrentTrend()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700">
-                    <span class="material-symbols-outlined">bookmark</span>
-                    이 예측 저장하기
-                </button>
-            </div>
-        </div>
-
-        <!-- SEARCH RESULT PAGE -->
-        <div id="page-search" class="page">
-            <div class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg px-6 py-4 border-b">
-                <div class="flex items-center gap-4">
-                    <button onclick="showPage('home')" class="p-2 hover:bg-gray-100 rounded-full">
-                        <span class="material-symbols-outlined">arrow_back</span>
-                    </button>
-                    <h1 class="text-xl font-bold">검색 결과</h1>
-                </div>
-            </div>
-            <div class="px-6 pt-6">
-                <div class="bg-blue-50 rounded-xl p-4 mb-6">
-                    <p class="text-sm text-gray-600">"<span id="searchQuery" class="font-bold text-blue-600"></span>" 검색 결과</p>
-                </div>
-                <div id="searchResults" class="space-y-3"></div>
-            </div>
         </div>
     </main>
 
     <!-- Bottom Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t px-6 py-3 flex items-center justify-around z-50 max-w-7xl mx-auto">
-        <button onclick="showPage('home')" id="nav-home" class="flex flex-col items-center gap-1 nav-active text-blue-600">
+        <a href="index.html" class="flex flex-col items-center gap-1 nav-active text-blue-600">
             <span class="material-symbols-outlined">home</span>
             <span class="text-[10px] font-bold">홈</span>
-        </button>
-        <button onclick="showPage('discover')" id="nav-discover" class="flex flex-col items-center gap-1 text-gray-400">
+        </a>
+        <a href="discover.html" class="flex flex-col items-center gap-1 text-gray-400">
             <span class="material-symbols-outlined">explore</span>
             <span class="text-[10px] font-bold">발견</span>
-        </button>
-        <button onclick="showPage('saved')" id="nav-saved" class="flex flex-col items-center gap-1 text-gray-400">
+        </a>
+        <a href="saved.html" class="flex flex-col items-center gap-1 text-gray-400">
             <span class="material-symbols-outlined">bookmark</span>
             <span class="text-[10px] font-bold">저장</span>
-        </button>
-        <button onclick="showPage('profile')" id="nav-profile" class="flex flex-col items-center gap-1 text-gray-400">
+        </a>
+        <a href="profile.html" class="flex flex-col items-center gap-1 text-gray-400">
             <span class="material-symbols-outlined">person</span>
             <span class="text-[10px] font-bold">프로필</span>
-        </button>
+        </a>
     </nav>
 
     <script>
-        // Inline Data (to ensure it loads)
-        const CATEGORIES_DATA = [
-            { id: 'food', name: '푸드 & 디저트', slug: 'food', growth_rate: 340, trend_count: 12, icon: 'restaurant', color: '#ff6b6b', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600' },
-            { id: 'finance', name: '금융 & 투자', slug: 'finance', growth_rate: 280, trend_count: 8, icon: 'trending_up', color: '#4ecdc4', image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600' },
-            { id: 'fashion', name: '패션 & 뷰티', slug: 'fashion', growth_rate: 520, trend_count: 15, icon: 'checkroom', color: '#45b7d1', image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200' },
-            { id: 'entertainment', name: '엔터테인먼트', slug: 'entertainment', growth_rate: 180, trend_count: 6, icon: 'movie', color: '#96ceb4', image: 'https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?w=600' }
-        ];
+        // Navigation
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            window.scrollTo(0, 0);
+        }
         
-        const TRENDS_DATA = [
-            { id: 1, keyword: '공간 컴퓨팅 에코시스템', category: 'tech', category_name: '테크', subcategory: 'AR/VR', growth_rate: 890, confidence: 87, peak_date: '2026-03-05', days_to_peak: 18, description: '메타버스와 실제 세계를 연결하는 공간 컴퓨팅 기술', reasoning: 'Apple Vision Pro 출시 이후 R&D 투자 340% 증가', chart_data: [23, 35, 58, 89, 145, 210, 340, 480, 650, 890] },
-            { id: 2, keyword: '나이키 덩크 로우 흰색', category: 'fashion', category_name: '패션', subcategory: '스니커즈', growth_rate: 340, confidence: 87, peak_date: '2026-03-15', days_to_peak: 28, description: '봄 시즌 흰색 스니커즈 수요 급증', reasoning: '3월 흰색 스니커즈 검색량 평균 280% 증가', chart_data: [45, 65, 95, 145, 220, 310, 340] },
-            { id: 3, keyword: '재생 여행 디자인', category: 'travel', category_name: '여행', subcategory: '라이프스타일', growth_rate: 670, confidence: 78, peak_date: '2026-03-08', days_to_peak: 21, description: '환경을 회복시키는 지속가능한 여행', reasoning: '밀레니얼 세대 450% 검색 증가', chart_data: [30, 55, 125, 250, 460, 670] },
-            { id: 4, keyword: '바이오 섬유', category: 'fashion', category_name: '패션', subcategory: '지속가능성', growth_rate: 540, confidence: 72, peak_date: '2026-03-15', days_to_peak: 28, description: '버섯, 해초에서 추출한 친환경 소재', reasoning: '주요 브랜드 ESG 경영 강화로 수요 급증', chart_data: [25, 48, 98, 195, 350, 540] },
-            { id: 5, keyword: '디그로스 경제 모델', category: 'finance', category_name: '금융', subcategory: '경제', growth_rate: 430, confidence: 65, peak_date: '2026-03-22', days_to_peak: 35, description: '성장보다 안정과 분배를 중시하는 경제', reasoning: '경제 불확실성으로 안정적 모델 논의 활발', chart_data: [20, 42, 95, 210, 330, 430] },
-            { id: 6, keyword: '신경다양성 워크스페이스', category: 'career', category_name: '커리어', subcategory: 'HR', growth_rate: 120, confidence: 52, peak_date: '2026-03-29', days_to_peak: 42, description: 'ADHD, 자폐 스펙트럼 직원 위한 환경', reasoning: '글로벌 기업 신경다양성 채용 확대', chart_data: [15, 35, 72, 120] }
-        ];
+        function openSearch() {
+            document.getElementById('searchModal').classList.remove('hidden');
+            document.getElementById('searchModal').classList.add('flex');
+        }
+        
+        function closeSearch() {
+            document.getElementById('searchModal').classList.add('hidden');
+            document.getElementById('searchModal').classList.remove('flex');
+        }
+        
+        function quickSearch(q) {
+            alert(q + ' 검색 기능은 개발 중입니다!');
+            closeSearch();
+        }
+        
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                alert('"' + query + '" 검색 결과 페이지로 이동합니다.');
+                closeSearch();
+            }
+        }
+        
+        function showDetail(id) {
+            alert(id + ' 상세 페이지로 이동합니다.');
+        }
     </script>
-    <script src="js/app.js"></script>
 </body>
 </html>
