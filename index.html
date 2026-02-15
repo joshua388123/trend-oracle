@@ -23,9 +23,10 @@
     const host = window.location.hostname;
     const path = window.location.pathname;
     
-    // If accessing trend.carryon.work, redirect to trend.html
+    // If accessing trend.carryon.work, ALWAYS redirect to trend.html
     if (host === 'trend.carryon.work' || host === 'www.trend.carryon.work') {
-        if (path === '/' || path === '/index.html') {
+        // Only redirect if not already on trend.html
+        if (!path.includes('trend.html')) {
             window.location.replace('/trend.html');
         }
     }
