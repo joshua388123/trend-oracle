@@ -17,6 +17,21 @@
 </head>
 <body class="bg-white text-black">
 
+<!-- Domain Router -->
+<script>
+(function() {
+    const host = window.location.hostname;
+    const path = window.location.pathname;
+    
+    // If accessing trend.carryon.work, redirect to trend.html
+    if (host === 'trend.carryon.work' || host === 'www.trend.carryon.work') {
+        if (path === '/' || path === '/index.html') {
+            window.location.replace('/trend.html');
+        }
+    }
+})();
+</script>
+
 <!-- Navigation -->
 <nav class="flex items-center justify-between px-6 py-8 border-b border-black/10">
     <div class="flex items-center">
