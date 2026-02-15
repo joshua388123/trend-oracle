@@ -14,10 +14,17 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         @media (min-width: 1024px) {
+            .book-spine {
+                flex: 1 1 0;
+                height: 70vh;
+                min-width: 0;
+            }
             .book-spine:hover {
-                flex-grow: 8;
+                flex: 8 1 0;
                 background-color: #000000;
             }
             .book-spine:hover .vertical-text {
@@ -27,15 +34,12 @@
                 opacity: 1;
                 pointer-events: auto;
             }
-            .book-spine {
-                flex-grow: 1;
-                height: 70vh;
-            }
         }
         .vertical-text {
             writing-mode: vertical-rl;
             text-orientation: mixed;
             transform: rotate(180deg);
+            white-space: nowrap;
         }
         .project-content {
             opacity: 0;
