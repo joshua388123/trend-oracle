@@ -43,16 +43,14 @@
             transition: opacity 0.3s ease-in-out;
             transition-delay: 0.2s;
         }
-        .book-spine:first-child {
+        /* 모든 book-spine 동일하게 처리 - hover 시에만 펼쳐짐 */
+        .book-spine {
+            background-color: #ffffff;
+            color: black;
+        }
+        .book-spine:hover {
             background-color: #000000;
             color: white;
-        }
-        .book-spine:first-child .project-content {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .book-spine:first-child .vertical-text {
-            opacity: 0;
         }
     </style>
 </head>
