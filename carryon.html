@@ -6,40 +6,38 @@
     <title>CarryOn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
+        :root { --primary: #0f49bd; --accent: #00d4aa; }
+        body { font-family: 'Manrope', sans-serif; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .prediction-pulse { animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+        @keyframes pulse-ring { 0% { transform: scale(0.33); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.3s ease-in; }
     </style>
 </head>
-<body>
+<body class="text-gray-900">
 
+<!-- Router Script -->
 <script>
-// Domain Router
-(function() {
-    const host = window.location.hostname;
-    const path = window.location.pathname;
-    
-    // If accessing trend.carryon.work, redirect to trend page
-    if (host === 'trend.carryon.work' || host === 'www.trend.carryon.work') {
-        if (path !== '/trend.html') {
-            window.location.replace('/trend.html' + window.location.search + window.location.hash);
-            return;
+    (function() {
+        const hostname = window.location.hostname;
+        
+        if (hostname === 'trend.carryon.work' || hostname === 'www.trend.carryon.work') {
+            // Load TrendOracle
+            window.location.href = '/trend.html';
         }
-    }
-    
-    // If accessing carryon.work (root), show main page
-    // Default behavior - show CarryOn main
-})();
+        // else: stay on main CarryOn page
+    })();
 </script>
 
 <!-- CARRYON MAIN PAGE -->
-<div id="carryon-main" class="fade-in">
+<div id="main-site">
     <!-- Navigation -->
-    <nav class="flex items-center justify-between px-6 py-8 border-b border-black/10 bg-white">
+    <nav class="flex items-center justify-between px-6 py-8 border-b border-black/10">
         <div class="flex items-center">
             <span class="material-symbols-outlined text-2xl">menu</span>
         </div>
@@ -56,7 +54,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="flex flex-col items-center justify-center px-6 pt-20 pb-16 bg-white">
+    <section class="flex flex-col items-center justify-center px-6 pt-20 pb-16">
         <h1 class="text-[18vw] sm:text-[120px] font-extrabold leading-[0.85] tracking-tighter text-center uppercase">
             Carry<br/>On
         </h1>
@@ -67,7 +65,7 @@
     </section>
 
     <!-- Navigation Links -->
-    <main class="flex-1 px-4 mb-24 bg-white">
+    <main class="flex-1 px-4 mb-24">
         <div class="flex flex-col border-t border-black/10">
             
             <!-- Trend Link (Highlighted) -->
@@ -109,7 +107,7 @@
     </main>
 
     <!-- Featured Section -->
-    <section class="px-6 pb-20 bg-white">
+    <section class="px-6 pb-20">
         <div class="aspect-[4/5] w-full bg-black/5 relative overflow-hidden group">
             <img alt="Minimalist Architecture" class="w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800"/>
             <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
@@ -143,10 +141,10 @@
         </div>
     </footer>
 
-    <div class="h-20 bg-white"></div>
+    <div class="h-20"></div>
 
     <!-- Footer -->
-    <div class="px-6 py-12 text-center border-t border-black/10 bg-white">
+    <div class="px-6 py-12 text-center border-t border-black/10">
         <p class="text-[9px] font-medium tracking-[0.6em] uppercase opacity-30">© 2024 CarryOn Studio. All Rights Reserved.</p>
     </div>
 </div>
