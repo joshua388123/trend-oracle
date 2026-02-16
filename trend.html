@@ -217,134 +217,186 @@
     </nav>
 
     <script>
-        // YouTube API Configuration
+        // API Keys
         const YOUTUBE_API_KEY = 'AIzaSyAzNt5EQvnRXmUvEa8QgX7xainuen9L2NE';
-        
-        // Trending keywords to track
-        const trendingKeywords = [
-            { keyword: '아이폰 16', category: 'tech' },
-            { keyword: '챗GPT', category: 'tech' },
-            { keyword: '비트코인', category: 'finance' },
-            { keyword: '나이키', category: 'fashion' },
-            { keyword: '떡볶이', category: 'food' },
-            { keyword: '스마트워치', category: 'tech' },
-            { keyword: '테슬라', category: 'tech' },
-            { keyword: '명품가방', category: 'fashion' },
-            { keyword: '주식투자', category: 'finance' },
-            { keyword: '다이어트', category: 'health' }
-        ];
+        const NEWS_API_KEY = '817e1ee4be4e4b51bea9bdfbec7c969e';
         
         let trendsData = [];
         
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            fetchRealTrends();
+            fetchTrendingVideosAndNews();
             updateStats();
             // Auto refresh every 30 minutes
-            setInterval(fetchRealTrends, 30 * 60 * 1000);
+            setInterval(fetchTrendingVideosAndNews, 30 * 60 * 1000);
         });
         
-        // Fetch real trends from YouTube API
-        async function fetchRealTrends() {
+        // Fetch trending videos from YouTube + News
+        async function fetchTrendingVideosAndNews() {
             const container = document.getElementById('trendList');
-            container.innerHTML = '<div class="text-center py-10"><span class="loading mr-2"></span>YouTube에서 실시간 데이터 수집 중...</div>';
-            document.getElementById('apiStatus').innerHTML = '<span class="loading mr-2"></span>YouTube 실시간 수집 중...';
+            container.innerHTML = '<div class="text-center py-10"><span class="loading mr-2"></span>실시간 트렌드 수집 중...</div>';
+            document.getElementById('apiStatus').innerHTML = '<span class="loading mr-2"></span>YouTube + News 실시간 수집 중...';
             
             try {
-                const results = [];
+                // 1. Get trending videos from YouTube
+                const trendingUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&regionCode=KR&maxResults=20&key=${YOUTUBE_API_KEY}`;
+                const trendingRes = await fetch(trendingUrl);
+                const trendingData = await trendingRes.json();
                 
-                // Fetch data for each keyword
-                for (const item of trendingKeywords) {
-                    try {
-                        const data = await fetchYouTubeData(item.keyword);
-                        if (data && data.totalViews > 0) {
-                            const score = calculateTrendScore(data);
-                            results.push({
-                                id: item.keyword,
-                                keyword: item.keyword,
-                                category: item.category,
-                                growth_rate: score.growth,
-                                confidence: score.confidence,
-                                youtube_views: data.totalViews,
-                                video_count: data.videoCount,
-                                peak_date: calculatePeakDate(score.growth)
-                            });
-                        }
-                    } catch (e) {
-                        console.error(`Error fetching ${item.keyword}:`, e);
-                    }
+                // 2. Get news headlines
+                const newsUrl = `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${NEWS_API_KEY}&pageSize=20`;
+                const newsRes = await fetch(newsUrl);
+                const newsData = await newsRes.json();
+                
+                // 3. Extract keywords from titles
+                const keywordMap = new Map();
+                
+                // Process YouTube trending
+                if (trendingData.items) {
+                    trendingData.items.forEach(video => {
+                        const title = video.snippet.title;
+                        const views = parseInt(video.statistics.viewCount || 0);
+                        const keywords = extractKeywords(title);
+                        
+                        keywords.forEach(kw => {
+                            if (keywordMap.has(kw)) {
+                                const existing = keywordMap.get(kw);
+                                existing.youtube_views += views;
+                                existing.mentions += 1;
+                            } else {
+                                keywordMap.set(kw, {
+                                    keyword: kw,
+                                    category: detectCategory(kw),
+                                    youtube_views: views,
+                                    news_count: 0,
+                                    mentions: 1
+                                });
+                            }
+                        });
+                    });
                 }
                 
-                // Sort by growth rate
-                results.sort((a, b) => b.growth_rate - a.growth_rate);
-                trendsData = results;
+                // Process News headlines
+                if (newsData.articles) {
+                    newsData.articles.forEach(article => {
+                        const title = article.title;
+                        const keywords = extractKeywords(title);
+                        
+                        keywords.forEach(kw => {
+                            if (keywordMap.has(kw)) {
+                                const existing = keywordMap.get(kw);
+                                existing.news_count += 1;
+                                existing.mentions += 1;
+                            } else {
+                                keywordMap.set(kw, {
+                                    keyword: kw,
+                                    category: detectCategory(kw),
+                                    youtube_views: 0,
+                                    news_count: 1,
+                                    mentions: 1
+                                });
+                            }
+                        });
+                    });
+                }
+                
+                // Convert to array and calculate scores
+                const results = Array.from(keywordMap.values())
+                    .filter(item => item.mentions >= 2) // At least 2 mentions
+                    .map(item => {
+                        const totalMentions = item.mentions;
+                        const youtubeScore = Math.min(item.youtube_views / 100000, 100);
+                        const newsScore = item.news_count * 10;
+                        const totalScore = youtubeScore + newsScore;
+                        
+                        return {
+                            id: item.keyword,
+                            keyword: item.keyword,
+                            category: item.category,
+                            growth_rate: Math.floor(totalScore),
+                            confidence: Math.min(60 + (totalMentions * 5), 99),
+                            youtube_views: item.youtube_views,
+                            news_count: item.news_count,
+                            mentions: totalMentions,
+                            peak_date: calculatePeakDate(totalScore)
+                        };
+                    });
+                
+                // Sort by mention count (언급량 높은 순)
+                results.sort((a, b) => b.mentions - a.mentions);
+                trendsData = results.slice(0, 15); // Top 15
                 
                 renderTrends(trendsData);
                 const now = new Date().toLocaleTimeString('ko-KR');
-                document.getElementById('apiStatus').innerHTML = '<span class="text-green-400">●</span> YouTube 실시간 연결됨 (' + now + ')';
-                document.getElementById('dataSource').textContent = 'YouTube 실시간';
+                document.getElementById('apiStatus').innerHTML = '<span class="text-green-400">●</span> 실시간 연결됨 (' + now + ')';
+                document.getElementById('dataSource').textContent = 'YouTube+News 실시간';
                 
             } catch (e) {
                 console.error('Error:', e);
-                loadDemoData();
+                loadFallbackData();
             }
         }
         
-        // Fetch YouTube data
-        async function fetchYouTubeData(keyword) {
-            const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(keyword)}&type=video&maxResults=10&key=${YOUTUBE_API_KEY}`;
+        // Extract keywords from text
+        function extractKeywords(text) {
+            const stopWords = ['그리고', '하지만', '그러나', '또는', '등', '의', '이', '가', '은', '는', '을', '를', '에서', '에게', '께', '에게서', '한테', '로', '으로', '와', '과', '랑', '이랑', '처럼', '만큼', '보다', '까지', '부터', '마다', '마다의', '마다는'];
             
-            const searchRes = await fetch(searchUrl);
-            const searchData = await searchRes.json();
+            // Common trend keywords to look for
+            const trendKeywords = [
+                '아이폰', '갤럭시', '삼성', '애플', '테슬라', '비트코인', '이더리움', '주식', '코인', 'NFT',
+                '챗GPT', '클로드', 'AI', '인공지능', '로봇', '드론', 'VR', 'AR', '메타버스',
+                '떡볶이', '치킨', '피자', '맛집', '카페', '디저트', '다이어트', '건강', '운동', '필라테스',
+                '나이키', '아디다스', '명품', '가방', '신발', '옷', '패션', '코디', '메이크업', '화장품',
+                '여행', '제주도', '부산', '속초', '강릉', '호텔', '펜션', '리조트',
+                '영화', '드라마', '넷플릭스', '유튜브', 'BTS', '블랙핑크', '아이돌', '연예인',
+                '게임', '롤', '배그', '오버워치', '스팀', '닌텐도', '플스',
+                '집값', '부동산', '전세', '월세', '대출', '금리', '투자', '재테크'
+            ];
             
-            if (!searchData.items || searchData.items.length === 0) {
-                return { totalViews: 0, videoCount: 0 };
-            }
-            
-            const videoIds = searchData.items.map(item => item.id.videoId).join(',');
-            const statsUrl = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoIds}&key=${YOUTUBE_API_KEY}`;
-            
-            const statsRes = await fetch(statsUrl);
-            const statsData = await statsRes.json();
-            
-            let totalViews = 0;
-            statsData.items.forEach(item => {
-                totalViews += parseInt(item.statistics.viewCount || 0);
+            const found = [];
+            trendKeywords.forEach(kw => {
+                if (text.toLowerCase().includes(kw.toLowerCase())) {
+                    found.push(kw);
+                }
             });
             
-            return {
-                totalViews: totalViews,
-                videoCount: searchData.items.length
-            };
+            return found.length > 0 ? found : [text.split(/[\s,\.]+/)[0]].filter(w => w.length > 1 && !stopWords.includes(w));
         }
         
-        // Calculate trend score
-        function calculateTrendScore(data) {
-            const avgViews = data.totalViews / (data.videoCount || 1);
-            const youtubeScore = Math.min(avgViews / 10000, 100);
-            
-            return {
-                growth: Math.floor(youtubeScore * 10),
-                confidence: Math.floor(60 + (youtubeScore * 0.3))
+        // Detect category
+        function detectCategory(keyword) {
+            const categories = {
+                tech: ['아이폰', '갤럭시', '삼성', '애플', '테슬라', 'AI', '인공지능', '챗GPT', '로봇', '드론', 'VR', 'AR', '메타버스', '앱', '스마트폰', '노트북', '태블릿'],
+                finance: ['비트코인', '이더리움', '주식', '코인', 'NFT', '투자', '재테크', '금리', '대출', '부동산', '집값', '전세', '월세'],
+                food: ['떡볶이', '치킨', '피자', '맛집', '카페', '디저트', '밥', '국', '찌개', '면', '빵', '커피'],
+                fashion: ['나이키', '아디다스', '명품', '가방', '신발', '옷', '패션', '코디', '메이크업', '화장품', '옷장'],
+                health: ['다이어트', '건강', '운동', '필라테스', '요가', '헬스', '병원', '영양제', '비타민'],
+                travel: ['여행', '제주도', '부산', '속초', '강릉', '호텔', '펜션', '리조트', '휴가'],
+                entertainment: ['영화', '드라마', '넷플릭스', '유튜브', 'BTS', '블랙핑크', '아이돌', '연예인', '방송'],
+                game: ['게임', '롤', '배그', '오버워치', '스팀', '닌텐도', '플스', '모바일게임']
             };
+            
+            for (const [cat, keywords] of Object.entries(categories)) {
+                if (keywords.some(k => keyword.includes(k))) return cat;
+            }
+            return 'etc';
         }
         
         // Calculate peak date
-        function calculatePeakDate(growth) {
-            const days = Math.floor(30 - (growth / 50));
+        function calculatePeakDate(score) {
+            const days = Math.max(3, Math.floor(30 - (score / 20)));
             const date = new Date();
             date.setDate(date.getDate() + days);
             return date.toISOString().split('T')[0];
         }
         
-        function loadDemoData() {
+        function loadFallbackData() {
             trendsData = [
-                { id: 1, keyword: '아이폰 16', category: 'tech', growth_rate: 890, confidence: 92, youtube_views: 2400000, peak_date: '2026-03-05' },
-                { id: 2, keyword: '나이키 덩크 로우', category: 'fashion', growth_rate: 340, confidence: 87, youtube_views: 850000, peak_date: '2026-03-15' }
+                { id: 1, keyword: '실시간 데이터 로딩 중...', category: 'etc', growth_rate: 0, confidence: 0, youtube_views: 0, news_count: 0, mentions: 0, peak_date: '-' }
             ];
             renderTrends(trendsData);
-            document.getElementById('apiStatus').innerHTML = '<span class="text-yellow-400">●</span> 데모 모드 (API 오류)';
-            document.getElementById('dataSource').textContent = '데모 데이터';
+            document.getElementById('apiStatus').innerHTML = '<span class="text-yellow-400">●</span> 데이터 새로고침 중...';
+            document.getElementById('dataSource').textContent = '로딩 중';
         }
         
         function renderTrends(trends) {
@@ -356,23 +408,21 @@
             }
             
             container.innerHTML = trends.map((trend, index) => `
-                <div onclick="showDetail(${trend.id})" class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-all">
+                <div onclick="showDetail('${trend.id}')" class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-all">
                     <div class="flex items-center gap-4">
                         <span class="text-3xl font-black text-blue-100 italic">${String(index + 1).padStart(2, '0')}</span>
                         <div class="flex-1">
                             <p class="font-bold text-sm">${trend.keyword}</p>
-                            <p class="text-xs text-blue-600">${trend.category || '전체'} · YouTube ${(trend.youtube_views / 10000).toFixed(0)}만회</p>
+                            <p class="text-xs text-blue-600">${trend.category || '전체'} · 언급 ${trend.mentions || 1}회</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-green-600 font-bold">+${trend.growth_rate}%</p>
-                            <p class="text-xs text-gray-400">${getDaysUntil(trend.peak_date)}</p>
+                            <p class="text-green-600 font-bold text-lg">${trend.mentions || 1}</p>
+                            <p class="text-xs text-gray-400">${trend.news_count || 0}개 뉴스</p>
                         </div>
                     </div>
-                    <div class="mt-3">
-                        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-gradient-to-r from-blue-600 to-green-400 rounded-full" style="width: ${trend.confidence}%"></div>
-                        </div>
-                        <p class="text-xs text-gray-500 mt-1">확신도 ${trend.confidence}% · 피크: ${trend.peak_date}</p>
+                    <div class="mt-3 flex gap-2 text-xs">
+                        ${trend.youtube_views > 0 ? `<span class="px-2 py-1 bg-red-100 text-red-600 rounded-full">YouTube ${(trend.youtube_views / 10000).toFixed(0)}만</span>` : ''}
+                        ${trend.news_count > 0 ? `<span class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full">뉴스 ${trend.news_count}개</span>` : ''}
                     </div>
                 </div>
             `).join('');
