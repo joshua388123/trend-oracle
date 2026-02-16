@@ -217,54 +217,133 @@
     </nav>
 
     <script>
-        // API Configuration
-        const API_BASE = '/api';
+        // YouTube API Configuration
+        const YOUTUBE_API_KEY = 'AIzaSyAzNt5EQvnRXmUvEa8QgX7xainuen9L2NE';
         
-        // For now, use simulated data until API is deployed
+        // Trending keywords to track
+        const trendingKeywords = [
+            { keyword: '아이폰 16', category: 'tech' },
+            { keyword: '챗GPT', category: 'tech' },
+            { keyword: '비트코인', category: 'finance' },
+            { keyword: '나이키', category: 'fashion' },
+            { keyword: '떡볶이', category: 'food' },
+            { keyword: '스마트워치', category: 'tech' },
+            { keyword: '테슬라', category: 'tech' },
+            { keyword: '명품가방', category: 'fashion' },
+            { keyword: '주식투자', category: 'finance' },
+            { keyword: '다이어트', category: 'health' }
+        ];
+        
         let trendsData = [];
         
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            fetchTrends();
+            fetchRealTrends();
             updateStats();
+            // Auto refresh every 30 minutes
+            setInterval(fetchRealTrends, 30 * 60 * 1000);
         });
         
-        // Fetch trends from API
-        async function fetchTrends() {
+        // Fetch real trends from YouTube API
+        async function fetchRealTrends() {
             const container = document.getElementById('trendList');
-            container.innerHTML = '<div class="text-center py-10"><span class="loading mr-2"></span>실제 데이터를 수집 중...</div>';
+            container.innerHTML = '<div class="text-center py-10"><span class="loading mr-2"></span>YouTube에서 실시간 데이터 수집 중...</div>';
+            document.getElementById('apiStatus').innerHTML = '<span class="loading mr-2"></span>YouTube 실시간 수집 중...';
             
             try {
-                // Try to fetch from API
-                const response = await fetch(`${API_BASE}/api/trends`);
+                const results = [];
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    trendsData = data.data || [];
-                    renderTrends(trendsData);
-                    document.getElementById('apiStatus').innerHTML = '<span class="text-green-400">●</span> 실시간 데이터 연결됨';
-                } else {
-                    // Fallback to demo data
-                    loadDemoData();
+                // Fetch data for each keyword
+                for (const item of trendingKeywords) {
+                    try {
+                        const data = await fetchYouTubeData(item.keyword);
+                        if (data && data.totalViews > 0) {
+                            const score = calculateTrendScore(data);
+                            results.push({
+                                id: item.keyword,
+                                keyword: item.keyword,
+                                category: item.category,
+                                growth_rate: score.growth,
+                                confidence: score.confidence,
+                                youtube_views: data.totalViews,
+                                video_count: data.videoCount,
+                                peak_date: calculatePeakDate(score.growth)
+                            });
+                        }
+                    } catch (e) {
+                        console.error(`Error fetching ${item.keyword}:`, e);
+                    }
                 }
+                
+                // Sort by growth rate
+                results.sort((a, b) => b.growth_rate - a.growth_rate);
+                trendsData = results;
+                
+                renderTrends(trendsData);
+                const now = new Date().toLocaleTimeString('ko-KR');
+                document.getElementById('apiStatus').innerHTML = '<span class="text-green-400">●</span> YouTube 실시간 연결됨 (' + now + ')';
+                document.getElementById('dataSource').textContent = 'YouTube 실시간';
+                
             } catch (e) {
-                // API not available yet, use demo
+                console.error('Error:', e);
                 loadDemoData();
             }
         }
         
+        // Fetch YouTube data
+        async function fetchYouTubeData(keyword) {
+            const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(keyword)}&type=video&maxResults=10&key=${YOUTUBE_API_KEY}`;
+            
+            const searchRes = await fetch(searchUrl);
+            const searchData = await searchRes.json();
+            
+            if (!searchData.items || searchData.items.length === 0) {
+                return { totalViews: 0, videoCount: 0 };
+            }
+            
+            const videoIds = searchData.items.map(item => item.id.videoId).join(',');
+            const statsUrl = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoIds}&key=${YOUTUBE_API_KEY}`;
+            
+            const statsRes = await fetch(statsUrl);
+            const statsData = await statsRes.json();
+            
+            let totalViews = 0;
+            statsData.items.forEach(item => {
+                totalViews += parseInt(item.statistics.viewCount || 0);
+            });
+            
+            return {
+                totalViews: totalViews,
+                videoCount: searchData.items.length
+            };
+        }
+        
+        // Calculate trend score
+        function calculateTrendScore(data) {
+            const avgViews = data.totalViews / (data.videoCount || 1);
+            const youtubeScore = Math.min(avgViews / 10000, 100);
+            
+            return {
+                growth: Math.floor(youtubeScore * 10),
+                confidence: Math.floor(60 + (youtubeScore * 0.3))
+            };
+        }
+        
+        // Calculate peak date
+        function calculatePeakDate(growth) {
+            const days = Math.floor(30 - (growth / 50));
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            return date.toISOString().split('T')[0];
+        }
+        
         function loadDemoData() {
-            // Demo data until API is ready
             trendsData = [
                 { id: 1, keyword: '아이폰 16', category: 'tech', growth_rate: 890, confidence: 92, youtube_views: 2400000, peak_date: '2026-03-05' },
-                { id: 2, keyword: '나이키 덩크 로우', category: 'fashion', growth_rate: 340, confidence: 87, youtube_views: 850000, peak_date: '2026-03-15' },
-                { id: 3, keyword: '비트코인 ETF', category: 'finance', growth_rate: 420, confidence: 78, youtube_views: 1200000, peak_date: '2026-03-10' },
-                { id: 4, keyword: '떡볶이 프랜차이즈', category: 'food', growth_rate: 280, confidence: 72, youtube_views: 650000, peak_date: '2026-03-20' },
-                { id: 5, keyword: '챗GPT 비즈니스', category: 'tech', growth_rate: 670, confidence: 85, youtube_views: 1800000, peak_date: '2026-03-08' }
+                { id: 2, keyword: '나이키 덩크 로우', category: 'fashion', growth_rate: 340, confidence: 87, youtube_views: 850000, peak_date: '2026-03-15' }
             ];
-            
             renderTrends(trendsData);
-            document.getElementById('apiStatus').innerHTML = '<span class="text-yellow-400">●</span> 데모 모드 (API 배포 필요)';
+            document.getElementById('apiStatus').innerHTML = '<span class="text-yellow-400">●</span> 데모 모드 (API 오류)';
             document.getElementById('dataSource').textContent = '데모 데이터';
         }
         
